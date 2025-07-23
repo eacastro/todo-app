@@ -49,3 +49,4 @@ app.*.map.json
 /linux/
 /ios/
 /android/app/src/main/res/
+devtools_options.yaml

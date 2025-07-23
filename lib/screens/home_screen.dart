@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_exercises_app/constants/app_constants.dart';
+import 'package:flutter_exercises_app/dto/task.dart';
+import 'package:flutter_exercises_app/model/task_model.dart';
+import 'package:flutter_exercises_app/widgets/add_dialog.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_exercises_app/widgets/tasks.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -10,52 +16,34 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late int _counter;
+  final _fabIcon = const Icon(Icons.add_outlined);
+  final _items = const Center(child: Tasks());
+
+  late FloatingActionButton _fabAddTask;
 
   @override
   void initState() {
-    _counter = 0;
+    _fabAddTask = FloatingActionButton(
+      onPressed: _addNewTask,
+      child: _fabIcon,
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('The counter is'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: OverflowBar(
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              setState(
-                () => _counter++,
-              );
-            },
-            child: const Icon(Icons.add),
-          ),
-          const SizedBox(
-            width: 16.0,
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              setState(
-                () => _counter--,
-              );
-            },
-            child: const Icon(Icons.remove),
-          ),
-        ],
-      ),
+      body: _items,
+      floatingActionButton: _fabAddTask,
+    );
+  }
+
+  void _addNewTask() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const AddDialog();
+      },
     );
   }
 }
