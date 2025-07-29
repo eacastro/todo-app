@@ -13,5 +13,6 @@ class AppConstants {
   static const String taskNameLabel = 'Task Name';
   static const String requiredFieldMsg = 'This field is required';
   static const String okLabel = 'OK';
+  static const String duplicatedTaskError = 'Task name already exists';
 
 }

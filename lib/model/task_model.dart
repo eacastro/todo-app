@@ -11,9 +11,14 @@ class TaskModel extends ChangeNotifier {
 
   List<Task> get tasks => _tasks;
 
-  void add(Task task) {
-    _tasks.add(task);
-    notifyListeners();
+  void add(Task taskToAdd) {
+    final taskNotExist =
+        _tasks.where((task) => task.name == taskToAdd.name).isEmpty;
+
+    if (taskNotExist) {
+      _tasks.add(taskToAdd);
+      notifyListeners();
+    }
   }
 
   void _initTasks() {

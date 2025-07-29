@@ -24,6 +24,7 @@ class _TaskFormState extends State<TaskForm> {
   late Widget _nameField;
   late Widget _form;
   late Widget _actions;
+  late List<Task> _tasks;
 
   @override
   void initState() {
@@ -55,6 +56,12 @@ class _TaskFormState extends State<TaskForm> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _tasks = Provider.of<TaskModel>(context).tasks;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return _form;
   }
@@ -62,16 +69,40 @@ class _TaskFormState extends State<TaskForm> {
   void _addTask() {
     if (_formKey.currentState!.validate()) {
       Navigator.pop(context);
-      context.read<TaskModel>().add(
-            Task(name: _controller.text),
-          );
+
+      final taskNotExist =
+          _tasks.where((task) => task.name == _controller.text).isEmpty;
+      final task = Task(name: _controller.text);
+
+      if (_tasks.isEmpty) {
+        context.read<TaskModel>().add(task);
+      }
+
+      if (taskNotExist) {
+        context.read<TaskModel>().add(task);
+      } else {
+        const snackBar =
+            SnackBar(content: Text(AppConstants.duplicatedTaskError));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+
       _controller.clear();
     }
   }
 
   String? _validateName(String? value) {
-    return (value != null && value.isNotEmpty)
-        ? null
-        : AppConstants.requiredFieldMsg;
+    if (value != null) {
+      final valueExist = _tasks.where((task) => task.name == value).isNotEmpty;
+
+      if (value.isEmpty) {
+        return AppConstants.requiredFieldMsg;
+      }
+
+      if (valueExist) {
+        return AppConstants.duplicatedTaskError;
+      }
+    }
+
+    return null;
   }
 }
