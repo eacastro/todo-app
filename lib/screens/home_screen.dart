@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_exercises_app/constants/app_constants.dart';
-import 'package:flutter_exercises_app/dto/task.dart';
-import 'package:flutter_exercises_app/model/task_model.dart';
-import 'package:flutter_exercises_app/widgets/add_dialog.dart';
-import 'package:provider/provider.dart';
+
+import 'package:flutter_exercises_app/widgets/task_dialog.dart';
 import 'package:flutter_exercises_app/widgets/tasks.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -42,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return const AddDialog();
+        return const TaskDialog();
       },
     );
   }

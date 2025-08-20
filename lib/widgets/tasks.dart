@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:flutter_exercises_app/widgets/task_dialog.dart';
 import 'package:flutter_exercises_app/dto/task.dart';
 import 'package:flutter_exercises_app/model/task_model.dart';
 
@@ -29,11 +31,26 @@ class _TasksState extends State<Tasks> {
     return ListView.separated(
       itemBuilder: (context, index) {
         final task = _tasks[index];
+        final editButton = IconButton(
+          onPressed: () => _editTask(task),
+          icon: const Icon(Icons.edit_outlined),
+        );
 
-        return ListTile(title: Text(task.name));
+        return ListTile(
+          title: Text(task.name),
+          trailing: editButton,
+        );
       },
       separatorBuilder: (context, index) => const Divider(),
       itemCount: _tasks.length,
+    );
+  }
+
+  void _editTask(Task task) {
+    context.read<TaskModel>().initEdit(task);
+    showDialog(
+      context: context,
+      builder: (context) => const TaskDialog(),
     );
   }
 }

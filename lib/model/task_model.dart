@@ -8,8 +8,13 @@ class TaskModel extends ChangeNotifier {
   }
 
   final List<Task> _tasks = [];
+  Task? _taskInEdition;
+
+  bool _showEditModal = false;
 
   List<Task> get tasks => _tasks;
+  bool get showEditModal => _showEditModal;
+  Task? get taskInEdition => _taskInEdition;
 
   void add(Task taskToAdd) {
     final taskNotExist =
@@ -23,5 +28,21 @@ class TaskModel extends ChangeNotifier {
 
   void _initTasks() {
     _tasks.addAll(AppConstants.tasks);
+  }
+
+  void initEdit(Task task) {
+    _showEditModal = true;
+    _taskInEdition = task;
+    notifyListeners();
+  }
+
+  void edit(Task task, String newName) {
+    if (_tasks.contains(task)) {
+      int index = _tasks.indexOf(task);
+
+      _tasks.removeAt(index);
+      _tasks.insert(index, Task(name: newName));
+      notifyListeners();
+    }
   }
 }

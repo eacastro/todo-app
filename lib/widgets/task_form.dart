@@ -16,6 +16,7 @@ class _TaskFormState extends State<TaskForm> {
   final _controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _addLabel = const Text(AppConstants.addTaskLabel);
+  final _editLabel = const Text(AppConstants.editLabel);
   final _nameDecoration = const InputDecoration(
     hintText: AppConstants.taskNameLabel,
     border: OutlineInputBorder(),
@@ -25,6 +26,8 @@ class _TaskFormState extends State<TaskForm> {
   late Widget _form;
   late Widget _actions;
   late List<Task> _tasks;
+  late bool _showEditForm;
+  late Task? _taskInEdition;
 
   @override
   void initState() {
@@ -33,12 +36,22 @@ class _TaskFormState extends State<TaskForm> {
       validator: _validateName,
       decoration: _nameDecoration,
     );
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _tasks = Provider.of<TaskModel>(context).tasks;
+    _showEditForm = Provider.of<TaskModel>(context).showEditModal;
+    _taskInEdition = Provider.of<TaskModel>(context).taskInEdition;
+
     _actions = OverflowBar(
       alignment: MainAxisAlignment.end,
       children: [
         ElevatedButton(
-          onPressed: _addTask,
-          child: _addLabel,
+          onPressed: _processTask,
+          child: (_showEditForm) ? _editLabel : _addLabel,
         ),
       ],
     );
@@ -52,18 +65,23 @@ class _TaskFormState extends State<TaskForm> {
         ],
       ),
     );
-    super.initState();
-  }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _tasks = Provider.of<TaskModel>(context).tasks;
+    if (_showEditForm && _taskInEdition != null) {
+      _controller.text = _taskInEdition!.name;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return _form;
+  }
+
+  void _processTask() {
+    if (_showEditForm && _taskInEdition != null) {
+      _editTask(_taskInEdition!);
+    } else {
+      _addTask();
+    }
   }
 
   void _addTask() {
@@ -88,6 +106,14 @@ class _TaskFormState extends State<TaskForm> {
 
       _controller.clear();
     }
+  }
+
+  void _editTask(Task task) {
+    context.read<TaskModel>().edit(
+        task,
+        _controller.text,
+      );
+    Navigator.pop(context);
   }
 
   String? _validateName(String? value) {
