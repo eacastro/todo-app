@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _fabAddTask = FloatingActionButton(
-      onPressed: _addNewTask,
+      onPressed: _showTaskDialog,
       child: _fabIcon,
     );
     super.initState();
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _addNewTask() {
+  void _showTaskDialog() {
     showDialog(
       context: context,
       builder: (context) {
